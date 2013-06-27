@@ -5,6 +5,8 @@ This a server-side git hook that is used to overwrite another directory with wha
 
 It will only allow tags (and branches if configured to do so) to be pushed. It can also be configured to disallow tag and branch modifications.
 
+This is mainly used as a deployment script for simple websites/apps on remote servers.
+
 Use
 ---
 
