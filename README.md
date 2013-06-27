@@ -14,8 +14,8 @@ Symlink the files in to your bare server repo. This example assumes you have clo
 
 ```sh
 # ~/my-project.git/hooks
-ln -s ../replace-git-hook/update
-ln -s ../replace-git-hook/post-receive
+ln -s ../../replace-git-hook/update
+ln -s ../../replace-git-hook/post-receive
 ```
 
 ### Configuration options:
