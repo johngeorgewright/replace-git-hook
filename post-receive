@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+create_tmp_project()
+{
+  ref_name=$1
+  export_dir=$2
+  mkdir -p $export_dir
+  git archive -o $export_dir.tar $ref_name || exit 1
+  tar -xf $export_dir.tar -C $export_dir
+  rm $export_dir.tar
+}
+
+replace_project()
+{
+  source_dir=$1
+  target_dir=$2
+  rm -rf $target_dir
+  mv $source_dir $target_dir
+}
+
+post_receive()
+{
+  ref_name=$1
+  export_dir=$2
+  source_dir=$3
+  target_dir=$4
+  if [[ $source_dir == . ]]
+  then
+    source_dir=$export_dir
+  else
+    source_dir=$export_dir/$source_dir
+  fi
+  create_tmp_project $ref_name $export_dir
+  [ -d $source_dir ] && replace_project $source_dir $target_dir
+  rm -rf $export_dir
+}
+
+export_dir=/tmp/$$
+target_dir=`git config hooks.post-receive-replace.target`
+source_dir=`git config hooks.post-receive-replace.source`
+read old_rev new_rev ref_name
+
+if [ -n $ref_name -a -d $target_dir ]
+then
+  echo "$ref_name/$source_dir >>> $target_dir"
+  post_receive $ref_name $export_dir $source_dir $target_dir
+fi
+
